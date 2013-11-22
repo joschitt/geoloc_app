@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PhoneGap Application </title>
+
+	<style>
+	html {height: 100%;}
+	body {height: 100%; margin: 0; padding: 0;}
+	#map_placer {height: 100%; width: 100%;}
+	</style>
+	
+    <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+	<script type="text/javascript" 				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCETAMjQnhKa7p-Brlkblccord-6DILLNM&sensor=true">
+	    </script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        navigator.geolocation.getCurrentPosition(onSuccess,onError);
+    }
+	
+	function onSuccess(position) {
+		var latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+		
+        var mapOptions = {
+            center: latLng,
+            panControl: false,
+            zoomControl: true,
+            zoom: 16,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+		var mapContent = document.getElementById('map_placer')
+		
+		var map = new google.maps.Map(mapContent, mapOptions);
+		var marker = new google.maps.Marker({position:latLng, map: map});
+	}
+	
+	function onError(error) {
+		var errString = '';
+		if (error.code) {
+			switch(error.code) {
+			case 1: 
+				errString = "Can not fetch the loc info because no permission"
+				break;
+			case 2:
+				errString = "The loc can not be determined"
+				break;
+			case 3:
+				errString = "There was a timeout"
+				break;
+			default:
+				errString = "Unknown problem"
+				break;
+			}	
+		}
+		var element = document.getElementById('map_placer');
+		element.innerHTML = errString;
+	}
+
+    </script>
+  </head>
+  <body>
+   <div id="map_placer">Loading.-..</div>
+  </body>
+</html>
